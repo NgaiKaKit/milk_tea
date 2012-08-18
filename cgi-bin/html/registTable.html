@@ -1,0 +1,36 @@
+<div class="regist_bar">
+<form id="regist_form" name="regist_form" method="post" action="">
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="2"><strong>新規登録</strong></td>
+      </tr>
+
+      <tr>
+        <td>メールアドレス</td>
+        <td><input size="50" name="mail_address" value="%s" />
+            <span class="warningLabel">%s</span> </td>
+      </tr>
+        <tr>
+            <td>お名前</td>
+            <td><input name="user_name" size="30" value="%s" /><span class="warningLabel">%s</span> 
+                ※必須(半角20文字)
+                </td>
+        </tr>
+      <tr>
+        <td>パスワード</td>
+        <td><input name="password" type="password" size="30" value="%s" /><span class="warningLabel">%s</span> 
+          ※必須(半角6文字以上、32文字以内)</td>
+      </tr>
+            <tr>
+        <td>パスワード確認</td>
+        <td><input name="password2" type="password" size="30" value="%s" /></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><input type="button" value="確認" name="submit_btn" onclick="registration();" /></td>
+      </tr>
+    </tbody>
+  </table>
+<p>&nbsp;</p>
+</form></div>

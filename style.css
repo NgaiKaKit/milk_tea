@@ -1,0 +1,212 @@
+html{
+    font-family: sans-serif,"KozGoPro-Regular";
+    cursor: default;
+    font-size: 14px;
+}
+
+table{
+	font-size: 14px;
+}
+
+a:link{
+color: #000055;
+}
+a:visited{
+color: #000055;
+}
+a:hover{
+color: #3366FF;
+}
+a:active{
+color: #000055;
+}
+
+
+input[type="text"], input[type="password"], textarea{
+	border-radius:2px;
+	resize: none;
+}
+
+.TableButton{
+	border: 1px #aaaaaa solid;
+	cursor: pointer;
+	background: #eeeeee;
+	border-radius: 5px;
+}
+
+.TableButton:hover{
+    color:#3355ff;
+	border: 1px #99ccff solid;
+    text-decoration: underline;
+    background: #ddeeff;
+}
+
+.topicTable, .groupTable{
+	cursor: pointer;
+	border: 1px #ffffff solid;
+	border-radius:10px;
+	padding: 0px 0px 0px 10px;
+	
+}
+.topicTable:hover, .groupTable:hover{
+    background: #ddeeff;
+	border: 1px #99ccff solid;
+    
+}
+
+.userInfo{
+	text-align: right;
+	
+}
+
+.timeLabel{
+
+	font-size:12px;
+	color: #777777;
+}
+
+.smallLabel{
+	font-size:10px;
+	color: #444444;
+	text-align: right;
+}
+.warningSmallLabel{
+	font-size:10px;
+	color: red;
+	text-align: right;
+}
+
+#detailTopicTable, #topicConfirmTable, #replyConfirmTable, .replyTable{
+	border: 1px gray solid;
+	border-radius:10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 5px 5px;
+}
+
+#topicListTable, .welcomeTable, #mainPage{
+	border: 2px black solid;
+	border-radius:40px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 5px 5px;
+}
+
+.wimage{
+	border: 2px black solid;
+	border-radius:40px;
+	margin: 13px;
+	padding: 20px 20px;
+	max-width: 800px;
+	max-height: 600px;
+}
+
+
+
+#detailTopicHeader, #topicConfirmTableHeader{
+	border: 1px #aaaaaa solid;
+	font-size: 16px;
+	border-radius:7px;
+	margin: 3px;
+	background: #eeeeee;
+	padding: 2px 10px;
+
+}
+
+#mainContent{
+    
+    width: 1000px;
+	margin: 0px auto;
+}
+
+
+
+.currentPageButton{
+   width: 40px;
+   height: 30px;
+   border-radius:7px;
+   vertical-align: middle;
+   margin: auto;
+   border: 1px #aaaaaa solid;
+    background: #eeeeee;
+    
+}
+
+.selectorButton{
+   cursor: pointer;
+   width: 40px;
+   height: 30px;
+   border-radius:7px;
+   text-align: center;
+   margin: auto;
+   border: 1px #ffffff solid;
+}
+
+.selectorButton:hover{
+    color:#3355ff;
+	border: 1px #99ccff solid;
+    background: #ddeeff;
+}
+
+.Button{   
+   cursor: pointer;
+   padding: 3px 10px;
+   border-radius:7px;
+   text-align: center;
+   border: 1px #ffffff solid;
+}
+
+.Button:hover {
+    color:#3355ff;
+	border: 1px #99ccff solid;
+    background: #ddeeff;
+}
+
+.disableButton{
+   padding: 3px 10px;
+   border-radius:7px;
+   text-align: center;
+   border: 1px #ffffff solid;
+}
+
+.newLabel{
+   width: 30px;
+   height: 10px;
+   border-radius:7px;
+   margin: 0px 5px;
+   padding: 2px 5px;
+   background: #ff7777;
+   border: 1px #ff99cc solid;
+   color: white;
+   font-size: 8px;
+}
+
+.deleteLabel{
+   cursor: pointer;
+   color: red;
+   font-size: 36px;
+   visibility: hidden;
+   text-shadow: -1px 0 black, 0 1px black 1px0 black, 0 -1px black;
+}
+
+.deleteReplyLabel{
+   cursor: pointer;
+   color: red;
+   font-size: 14px;
+   visibility: hidden;
+   text-align: right;
+}
+.image {
+	max-height: 315px;
+	max-width: 560px;
+}
+
+.Content {
+	padding: 10px 15px;
+}
+
+.Warning{
+	font-size: 12px;
+	color: red;
+
+}

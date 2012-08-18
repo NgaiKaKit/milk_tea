@@ -1,0 +1,27 @@
+<div class="editTable">
+    <form id="editForm" name="editForm" method="post" action="">
+        <table>
+            <tbody>
+                <tr>
+                    <td ><strong>パスワード変更</strong></td>
+                </tr>
+                <tr>
+                    <td>現在のパスワード</td>
+                    <td><input name="oldPassword" type="Password" size="30" value="%s" /><span class="warningLabel">%s</span>
+                                        </tr>
+                <tr>
+                    <td>新しいパスワード</td>
+                    <td><input name="newPassword" type="password" size="30" value="%s" />※必須(半角6文字以上、32文字以内)</td>
+                </tr>
+                <tr>
+                    <td>新しいパスワード確認</td>
+                    <td><input name="newPassword2" type="password" size="30" value="%s" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="button" value="確認" name="submit_btn" onclick="changePassword();" /></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
+    </form></div>

@@ -1,0 +1,21 @@
+<table class="loginTable">
+    <tr>
+        <td width="30" >
+            <table><tr><td class="Button" onclick="goMainPage();" ><font size="5"> '_>` </font></td></tr></table>
+        </td>
+        <td width="200" align="right">
+            お名前:
+            <input type="text" id="usernameTextbox" name="usernameTextbox" size="15"/>
+            <br/>
+            <span class="%s">%s</span>
+        </td>
+        <td width="230" align="right">
+            パスワード: <input name="" type="password" id="passwordBox" name="passwordBox" onkeypress="onPasswordEnter(event.keyCode);" size="15"/>
+            <br/>
+            <span class="smallLabel">ログイン状態保持<input name="" type="checkbox" id="keepLoginCheckbox" name="keepLoginCheckbox"/>
+            </span>
+        </td>
+        <td width="80" ><span class="Button" onclick="login();">ログイン</span</td>
+        <td width="170"><span class="Button" onclick="loadRegistBar();">新規ユーザー登録</span></td>
+    </tr>
+</table>

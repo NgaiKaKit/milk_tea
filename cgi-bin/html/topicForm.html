@@ -1,0 +1,37 @@
+<form id="topicForm" name=topicForm>
+  <table width="800" height="73" border="0">
+  <tr>
+    <td width="124" scope="col">タイトル</td>
+    <td width="460" scope="col">
+      <input type="text" name="topicTitleTextbox" id="topicTitleTextbox" size = "100" />
+	</td>
+  </tr>
+  <tr>
+    <td>内容</td>
+    <td>
+      <textarea name="topicContentTextarea" cols="80" rows="5" id="topicContentTextarea" width = "450"></textarea></td>
+    </tr>
+    <!--<tr>
+      <td>写真アップロード</td>
+        <td>
+            <!--<input type="file" name="photo"/>
+            <input type="button" name="uploadButton" value="アップロード" onclick="uploadPhoto('Topic');"/>
+            <form action="/cgi-bin/simple_ajax_cgi_example.cgi" id="form1" name="form1" encType="multipart/form-data"  method="post" target="hidden_frame" >
+                <input type="file" id="file" name="file" style="width:450" onchange="filechange();">
+                    <!--<INPUT type="submit"  id="test" value="submit">
+                    <span id="msg"></span>
+                    <br>
+                    
+                    <iframe name='hidden_frame' id="hidden_frame" style='display:none'></iframe>
+            </form>
+</td>    </tr>
+     <tr>-->
+
+      <td>&nbsp;</td>
+      <td>
+	    <input type="button" name="submitTopicButton" id="submitTopicButton" onclick="submitTopic();" value="書き込み" />
+        <input type="button" name="cancelsubmitTopicButton" id="cancelSubmitTopicButton" onclick="cancelSubmitTopic();" value="取り消し" />
+      </td>
+    </tr>
+  </table>
+</form>
