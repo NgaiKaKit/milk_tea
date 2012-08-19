@@ -42,8 +42,8 @@ sub processTopic{
 sub processContent{
     
     #replace html characters
-    $_[0] =~ s/</ ＜ /g;
-    $_[0] =~ s/>/ ＞ /g;
+    $_[0] =~ s/</＜/g;
+    $_[0] =~ s/>/＞/g;
     
     $_[0] =~ s/&/ &amp;/g;
     
@@ -77,7 +77,9 @@ sub processContent{
     $c = "</a>";
     $_[0] =~ s/(\s|^)((http|https|ftp)?\:\/\/)[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]/$a$&$b$&$c/gi;
     
-    return "<p>".$_[0]."</p>";
+    #replace space
+    $_[0] =~ s/ /&nbsp;/gi;
+    return $_[0];
 }
 
 #html ファイルから文字を読み上げる
@@ -536,7 +538,7 @@ elsif ($func ~~ "loadReplyPage"){
     #返信ページを読み込め
     my $groupId = $query->param("groupId");
     my @data = get_topic_by_id($query->param("topicId"));
-    push @html, sprintf load_html("html/mainReplyPage.html"), $groupId, get_group_by_id($groupId), $data[2], $data[3], $data[0], dateTimeFormat($data[4]);
+    push @html, sprintf load_html("html/mainReplyPage.html"), $groupId, get_group_by_id($groupId), $data[2],$query->param("topicId"), $data[3], $data[0], dateTimeFormat($data[4]);
 }
 elsif ($func ~~ "setTopicPage"){
     #現在のページ数を記録する(このページから離れるときが使え
@@ -613,7 +615,7 @@ elsif ($func ~~ "submitReply"){
             $onMouseOut = "hiddenDeleteLabel('DR".$t[$i][1]."')";
             $button = "<span class='deleteReplyLabel' id = 'DR".$t[$i][1]."' onclick='deleteReply(".$t[$i][1].")'><b>✖</b></span>";
         }
-        push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$button, $t[$i][3], $t[$i][0],dateTimeFormat($t[$i][2]);
+        push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1], $button, $t[$i][1], $t[$i][3], $t[$i][0],dateTimeFormat($t[$i][2]);
     }
     
     
