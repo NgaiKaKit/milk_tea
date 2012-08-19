@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 18, 2012 at 07:04 PM
+-- Generation Time: Aug 20, 2012 at 03:29 AM
 -- Server version: 5.5.27
 -- PHP Version: 5.3.13
 
@@ -32,19 +32,20 @@ CREATE TABLE IF NOT EXISTS `group` (
   `total_topic` int(11) NOT NULL,
   `last_topic_id` int(11) NOT NULL,
   PRIMARY KEY (`group_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 --
 -- Dumping data for table `group`
 --
 
 INSERT INTO `group` (`group_id`, `group_name`, `total_topic`, `last_topic_id`) VALUES
-(0, 'å…¨éƒ¨', 0, 0),
-(8, 'ãƒ‹ãƒ¥ãƒ¼ã‚¹', 0, 0),
-(11, 'æ—…è¡Œ', 0, 0),
-(12, 'å‹•ç‰©', 0, 0),
-(13, 'æ–™ç†', 0, 0),
-(17, 'ã‚²ãƒ¼ãƒ ', 0, 0);
+(0, '一覧', 0, 0),
+(8, '旅行', 0, 0),
+(11, '料理', 0, 0),
+(12, '動物', 0, 0),
+(13, 'ゲーム', 0, 0),
+(17, '小説', 0, 0),
+(18, '映画', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `reply` (
   PRIMARY KEY (`reply_id`),
   KEY `post_id` (`topic_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=60 ;
 
 -- --------------------------------------------------------
 
@@ -82,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `topic` (
   PRIMARY KEY (`topic_id`),
   UNIQUE KEY `topic_id` (`topic_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=244 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=360 ;
 
 --
 -- Dumping data for table `topic`
@@ -107,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `user_info` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=203 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=206 ;
 
 --
 -- Dumping data for table `user_info`
@@ -116,7 +117,9 @@ CREATE TABLE IF NOT EXISTS `user_info` (
 INSERT INTO `user_info` (`user_id`, `user_name`, `password`, `email`, `type`, `reg_datetime`) VALUES
 (0, 'null', '', 'null', 0, '2012-08-01 00:00:00'),
 (1, 'admin', '302d70adf617c33881828ae64f1772268ef0b7d1', 'admin@admin.com', 1, '2012-08-08 00:00:00'),
-(2, 'guest', '', 'guest', 2, '2012-08-08 00:00:00');
+(2, 'guest', '', 'guest', 2, '2012-08-08 00:00:00'),
+(203, 'noname', 'b894886d831b6cfabb5ac33b9033deec0b883f07', 'noname@gmail.com', 0, '2012-08-18 20:15:39'),
+(204, 'bryansum', '932c4a7ece7446e458abd32c31399f84237ad5c7', 'bryansum@gmail.com', 0, '2012-08-18 22:38:26');
 
 --
 -- Constraints for dumped tables

@@ -357,6 +357,9 @@ function newReply(){
     scrollToPageBottom();
 }
 
+
+
+
 //トピックを提出、下見を作る、そして確認を待つ
 function submitTopic(){
     submitTitle = document.getElementById("topicTitleTextbox").value;
@@ -376,12 +379,18 @@ function submitTopic(){
         alert("文章が長すぎる、10000字以内でお願いします");
         return;
     }
+    
     var str = "func=submitTopic";
-    str += "&title=" + submitTitle;
-    str += "&content=" + submitContent;
+    str += "&title=" + encodeForSending(submitTitle);
+    str += "&content=" + encodeForSending(submitContent);
     loadPage(str, "postdiv");
 }
 //トピックの提出を放棄する
+
+function replaceAt(s, index, char){
+    return s.substr(0,index) + char + s.substr(index+char.length);
+}
+
 function cancelSubmitTopic(){
     var ans = 1;
     submitTitle = document.getElementById("topicTitleTextbox").value;
@@ -414,10 +423,22 @@ function goPage(pageNumber){
     }
 }
 //トプック確認、提出
+
+function encodeForSending(str){
+    result = str;
+    for (var i = 0; i < result.length; i++){
+        if (result[i] == '&'){
+            result = replaceAt(result, i,'＆');
+        }
+    }
+    return result;
+}
+
 function postTopicConfirm(){
+    
     var str = "func=postTopicConfirm";
-    str += "&title=" + submitTitle;
-    str += "&content=" + submitContent;
+    str += "&title=" + encodeForSending(submitTitle);
+    str += "&content=" + encodeForSending(submitContent);
     str += "&groupId=" + currentGroupId;
     loadPage(str,"topbar"); // need to change
     topicPageNumber = 1;
@@ -468,7 +489,7 @@ function submitReply(){
         return;
     }
     var str = "func=submitReply";
-    str += "&content=" + replyContent;
+    str += "&content=" + encodeForSending(replyContent);
     loadPage(str, "replydiv");
 }
 
@@ -493,7 +514,7 @@ function cancelSubmitReply(){
 function replyConfirm(){
     var str = "func=replyConfirm";
     str += "&topicId=" + currentTopicId;
-    str += "&content=" + replyContent;
+    str += "&content=" + encodeForSending(replyContent);
     exeStatement(str, ""); // need to change
     replyPageNumber = -1;
     loadPageSelector(currentTopicId,0);

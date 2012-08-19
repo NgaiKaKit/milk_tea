@@ -15,6 +15,7 @@ my $dsn = 'DBI:mysql:kayac_assignment2';
 my $user = 'root';
 my $password = '_admin123';
 
+binmode (STDIN, ":utf8");
 binmode(STDOUT, ":utf8");
 our @ISA = qw(Exporter);
 
@@ -25,7 +26,7 @@ our @EXPORT_OK = qw(get_group_by_id get_group get_total_topic get_total_search g
 #return: topic_number;
 sub get_total_search{
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     my $group;
     if($_[0] == 0){
         $group = " AND topic.topic_id <> 0";
@@ -54,7 +55,7 @@ sub get_total_search{
 #return: topic_number;
 sub get_total_topic{
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     my $group;
     if($_[0] == 0){
         $group = " WHERE topic_id <> 0";
@@ -74,7 +75,7 @@ sub get_total_topic{
 #return: reply_number;
 sub get_total_reply{
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("SELECT reply_count FROM topic WHERE topic_id = ?");
     $sth->bind_param ( 1, $_[0]);
@@ -86,7 +87,7 @@ sub get_total_reply{
 
 #sub add_topic{
 #    my $dbh = DBI ->connect ($dsn, $user, $password);
-#    $dbh -> {'mysql_enable_utf8'} = 1;
+#    $dbh->do("set names utf8");
 #
 #    my $sth = $dbh->prepare("INSERT INTO `group`(group_name, total_topic, last_topic_id)  VALUES( 'ゲーム', 0,0)");
 #    $sth -> execute();
@@ -105,11 +106,11 @@ sub get_total_reply{
 #return: 0 = success; 1 = user_name_exist; 2 = email_exists; 3 = unknown_error;
 sub write_user{
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("INSERT INTO user_info(user_name, password, email, type, reg_datetime) VALUES( ?, ?, ?, ?, ?)");
 	my $result = 0;
-    print $_[5];
+    #print $_[5];
     $sth->bind_param ( 1, $_[0]);
     $sth->bind_param ( 2, sha1_hex($_[1], $_[5]));
     $sth->bind_param ( 3, $_[2]);
@@ -168,7 +169,7 @@ sub write_user{
 #return: 0 = success; 1 = user_name_exist; 2 = email_exists; 3 = unknown_error;
 sub edit_user{
     my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
 
     #登録時間を読み出し
     my $sth = $dbh->prepare("SELECT reg_datetime FROM user_info WHERE user_id = ?");
@@ -198,7 +199,7 @@ sub edit_user{
 #return: @ { user_id, user_name, password, email, type, regist_day
 sub get_user_info{
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("SELECT * FROM user_info WHERE user_id = ?");
     $sth->bind_param ( 1, $_[0]);
@@ -218,7 +219,7 @@ sub check_password{
     
 	my $result = 0;
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("SELECT password, user_id ,reg_datetime FROM user_info WHERE user_name = ? OR email = ?");
     $sth->bind_param ( 1, $_[0]);
@@ -250,7 +251,7 @@ sub check_password{
 sub post_topic{
 	my $result = 0;
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("INSERT INTO topic(user_id, topic_title, post_time, content, group_id) VALUES( ?, ?, ?, ?, ?);");
     $sth->bind_param ( 1, $_[0]);
@@ -275,7 +276,7 @@ sub post_topic{
 sub update_group_info{
 	my $result = 0;
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
 	#自グルップのデータを読み出す
     my $sth = $dbh->prepare("SELECT MAX(topic_id) FROM topic WHERE group_id = ?" );
     
@@ -317,12 +318,14 @@ sub update_group_info{
 #}
 
 #検索
+#print search_topic(1,10,"post",0, "テスト");
 #param: page_number, post_per_page, sort, group_id, searchKey;
 #result: array { user_name, topic_id, topic_title, content, post_time, reply_count, replier_name, last_reply_time}
 sub search_topic{
+    #print $_[4];
     my @result;
     my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $group;
     #グルップ分類
@@ -350,7 +353,8 @@ sub search_topic{
     my $maxKey = 4;
     $maxKey = $#key if ($#key < 4);
     for (my $i = 0; $i <= $maxKey; $i++){
-        push @searchString, "topic.topic_title LIKE '%".$key[$i]."%' OR topic.content LIKE '%".$key[$i]."%' OR reply.content LIKE '%".$key[$i]."%'";
+        my $ekey = Encode::decode('utf8', $key[$i]);
+        push @searchString, "topic.topic_title LIKE '%".$ekey."%' OR topic.content LIKE '%".$ekey."%' OR reply.content LIKE '%".$ekey."%'";
     }
     
     my $substr = " ( SELECT topic.topic_id FROM topic LEFT JOIN reply ON topic.topic_id = reply.topic_id WHERE ". (join " OR ", @searchString)." ) ";
@@ -384,7 +388,7 @@ sub search_topic{
 sub get_topic{
     my @result;
     my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $group;
     #グルップ分類
@@ -433,9 +437,9 @@ sub get_topic{
 sub get_group{
     my @result;
     my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
-    my $sth = $dbh->prepare("SELECT `group`.group_id, `group`.group_name, `group`.total_topic, topic.topic_title, topic.post_time, user_info.user_name FROM `group`, topic, user_info WHERE `group`.last_topic_id = topic.topic_id AND topic.user_id = user_info.user_id");
+    my $sth = $dbh->prepare("SELECT `group`.group_id, `group`.group_name, `group`.total_topic, topic.topic_title, topic.post_time, user_info.user_name FROM `group`, topic, user_info WHERE `group`.last_topic_id = topic.topic_id AND topic.user_id = user_info.user_id ORDER BY `group`.group_id");
     $sth -> execute();
     
     while (my @data = $sth->fetchrow){
@@ -451,7 +455,7 @@ sub get_group{
 sub get_group_by_id{
     my $result;
     my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("SELECT group_name FROM `group` WHERE group_id = ?");
     $sth->bind_param ( 1,  $_[0]);
@@ -468,7 +472,7 @@ sub get_group_by_id{
 sub get_topic_by_id{
     my @result;
     my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("SELECT user_info.user_name, topic.topic_id, topic.topic_title, topic.content, topic.post_time, `group`.group_name FROM user_info, topic, `group` WHERE user_info.user_id = topic.user_id AND topic.topic_id = ? AND `group`.group_id = topic.group_id");
     $sth->bind_param ( 1,  $_[0]);
@@ -487,7 +491,7 @@ sub get_topic_by_id{
 sub delete_topic{
 	my $result = 0;
 	my $dbh = DBI -> connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     my $sth = $dbh->prepare("SELECT group_id FROM topic WHERE topic_id = ?");
     $sth->bind_param ( 1, $_[0]);
@@ -523,7 +527,7 @@ sub reply_topic {
 	my $result = 0;
     
 	my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     # 返信を入れる
     my $sth = $dbh->prepare("INSERT INTO reply(topic_id, user_id, reply_time, content) VALUES( ?, ?, ?, ?)");
     
@@ -566,7 +570,7 @@ sub reply_topic {
 sub delete_reply{
 	my $result = 0;
 	my $dbh = DBI -> connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     
     
@@ -599,7 +603,7 @@ sub delete_reply{
 sub get_reply{
     my @result;
     my $dbh = DBI ->connect ($dsn, $user, $password);
-    $dbh -> {'mysql_enable_utf8'} = 1;
+    $dbh->do("set names utf8");
     
     
     my $sth = $dbh->prepare("SELECT user_info.user_name, reply.reply_id, reply.reply_time, reply.content,reply.user_id FROM user_info, reply WHERE user_info.user_id = reply.user_id AND reply.topic_id = ? ORDER BY reply.reply_time LIMIT ? OFFSET ?;");

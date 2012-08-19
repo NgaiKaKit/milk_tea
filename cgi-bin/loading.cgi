@@ -9,7 +9,7 @@ use utf8;
 
 use DateTime::Format::MySQL;
 use CGI::Cookie;
-
+use Encode;
 binmode (STDIN, ":utf8");
 binmode (STDOUT, ":utf8");
 
@@ -31,6 +31,7 @@ my @html = "";
 #param: input_string
 #return: processed_string
 sub processTopic{
+    $_[0] =~ s/＆/&/g;
     $_[0] =~ s/</ ＜ /g;
     $_[0] =~ s/>/ ＞ /g;
     return $_[0];
@@ -39,20 +40,19 @@ sub processTopic{
 #コメント文字を処理する
 #param: input_string
 #return: processed_string
+
 sub processContent{
+    
+    #for handling passing & by form
+    $_[0] =~ s/＆/&/g;
     
     #replace html characters
     $_[0] =~ s/</＜/g;
     $_[0] =~ s/>/＞/g;
     
-    $_[0] =~ s/&/ &amp;/g;
-    
-    
     #replace blankline
     $_[0] =~ s/\n/\ <br\/\> /g;
-    
-    
-    
+    #$_[0] =~ s/ /&nbsp;/g;
     #replace email
     my $a ="<a href=\'mailto:";
     my $b ="\'>";
@@ -60,11 +60,14 @@ sub processContent{
     $_[0] =~ s/\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/$a$&$b$&$c/gi;
     
     #replace youtube
+    my $s = "#";
     $a ="<iframe width='640' height='360' src='";
     $b ="' frameborder='0' allowfullscreen></iframe>";
-    $_[0] =~ s/(http:\/\/)\w{0,3}.?youtube+\.\w{2,3}\/watch\?v=[\w-]{11}/$a$&$b/gi;
+    $_[0] =~ s/(http:\/\/)?\w{0,3}.?youtube+\.\w{2,3}\/watch\?v=[\w-]{11}(&[a-zA-Z0-9\-\.\_\~]*=[a-zA-Z0-9\-\.\_\~\!$s]*)*/$a$&$b/gi;
+    #handle change URI
     $_[0] =~  s/youtube\.com\/watch\?v=/youtube\.com\/embed\//gi;
-    
+    #handle change special_case
+    $_[0] =~ s/&feature=player_embedded$s!//gi;
     #replace image
     $a ="<a href=\'";
     $b ="\' target='_blank'> <img src=\'";
@@ -76,10 +79,9 @@ sub processContent{
     $b ="\' target='_blank'>";
     $c = "</a>";
     $_[0] =~ s/(\s|^)((http|https|ftp)?\:\/\/)[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]/$a$&$b$&$c/gi;
-    
-    #replace space
-    $_[0] =~ s/ /&nbsp;/gi;
+
     return $_[0];
+    
 }
 
 #html ファイルから文字を読み上げる
@@ -241,7 +243,7 @@ elsif ($func ~~ 'loadSearchTable'){
     
     my $optionList="";
     for (my $i = 0; $i <= $#t; $i ++){
-        $optionList .= "<option value='".$t[$i][0]."'>".$t[$i][1]."</option>";
+        $optionList .= "<option value='".$t[$i][0]."'>".Encode::decode('utf8',$t[$i][1])."</option>";
     }
     push @html, sprintf load_html("html/searchTable.html"), $optionList;
     
@@ -352,11 +354,11 @@ elsif ($func ~~ 'loadMainPage'){
     for (my $i = 0; $i <= $#t; $i ++){
         #トッピグがありませんの時
         if ($t[$i][3] ~~ 'null'){
-            push @html, sprintf $str, $t[$i][0], $t[$i][0], $t[$i][0], $t[$i][1], $t[$i][2], "トッピグがありません", "";
+            push @html, sprintf $str, $t[$i][0], $t[$i][0], $t[$i][0], Encode::decode('utf8',$t[$i][1]), $t[$i][2], "トッピグがありません", "";
         }
         #トッピグがのあるの時
         else{
-            push @html, sprintf $str, $t[$i][0], $t[$i][0], $t[$i][0], $t[$i][1], $t[$i][2], $t[$i][3], dateTimeToNow($t[$i][4])." by ".$t[$i][5];
+            push @html, sprintf $str, $t[$i][0], $t[$i][0], $t[$i][0], Encode::decode('utf8',$t[$i][1]), $t[$i][2], Encode::decode('utf8',$t[$i][3]), dateTimeToNow($t[$i][4])." by ".Encode::decode('utf8',$t[$i][5]);
         }
     }
 }
@@ -366,7 +368,7 @@ elsif ($func ~~'loadWelcomePage'){
 }
 elsif ($func ~~ 'loadMainTopicPage'){
     #トピック一覧ページを読み込め
-    push @html, sprintf load_html("html/mainTopicPage.html"), get_group_by_id($query->param("groupId"));
+    push @html, sprintf load_html("html/mainTopicPage.html"), Encode::decode('utf8',get_group_by_id($query->param("groupId")));
 }
 elsif ($func ~~ 'loadPageSelector'){
     #ページ選ぶのbuttonsよ読み込め
@@ -465,12 +467,12 @@ elsif ($func ~~'loadSearchList'){
         }
         #返信がないとき
         if ($t[$i][6] ~~ 'null'){
-            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1], $n.$t[$i][2],$t[$i][0],dateTimeFormat($t[$i][4]),$t[$i][5],"返信がありません","",$button;
+            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1], $n.Encode::decode('utf8',$t[$i][2]),Encode::decode('utf8',$t[$i][0]),dateTimeFormat($t[$i][4]),$t[$i][5],"返信がありません","",$button;
             
         }
         #返信があるとき
         else{
-            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1],$n.$t[$i][2],$t[$i][0],dateTimeFormat($t[$i][4]),$t[$i][5],$t[$i][6],dateTimeToNow($t[$i][7]),$button;
+            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1],$n.Encode::decode('utf8',$t[$i][2]),Encode::decode('utf8',$t[$i][0]),dateTimeFormat($t[$i][4]),$t[$i][5],$t[$i][6],dateTimeToNow($t[$i][7]),$button;
         }
     }
     
@@ -523,12 +525,12 @@ elsif ($func ~~'loadTopicList'){
         
         #返信がないとき
         if ($t[$i][6] ~~ 'null'){
-            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1], $n.$t[$i][2],$t[$i][0],dateTimeFormat($t[$i][4]),$t[$i][5],"返信がありません","",$button;
+            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1], $n.Encode::decode('utf8',$t[$i][2]),$t[$i][0],dateTimeFormat($t[$i][4]),$t[$i][5],"返信がありません","",$button;
             
         }
         #返信があるとき
         else{
-            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1],$n.$t[$i][2],$t[$i][0],dateTimeFormat($t[$i][4]),$t[$i][5],$t[$i][6],dateTimeToNow($t[$i][7]),$button;
+            push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1],$currentGroup, $t[$i][1],$n.Encode::decode('utf8',$t[$i][2]),$t[$i][0],dateTimeFormat($t[$i][4]),$t[$i][5],Encode::decode('utf8',$t[$i][6]),dateTimeToNow($t[$i][7]),$button;
         }
     }
     
@@ -538,7 +540,7 @@ elsif ($func ~~ "loadReplyPage"){
     #返信ページを読み込め
     my $groupId = $query->param("groupId");
     my @data = get_topic_by_id($query->param("topicId"));
-    push @html, sprintf load_html("html/mainReplyPage.html"), $groupId, get_group_by_id($groupId), $data[2],$query->param("topicId"), $data[3], $data[0], dateTimeFormat($data[4]);
+    push @html, sprintf load_html("html/mainReplyPage.html"), $groupId, Encode::decode('utf8',get_group_by_id($groupId)), Encode::decode('utf8',$data[2]),$query->param("topicId"), Encode::decode('utf8',$data[3]), Encode::decode('utf8',$data[0]), dateTimeFormat($data[4]);
 }
 elsif ($func ~~ "setTopicPage"){
     #現在のページ数を記録する(このページから離れるときが使え
@@ -615,7 +617,7 @@ elsif ($func ~~ "submitReply"){
             $onMouseOut = "hiddenDeleteLabel('DR".$t[$i][1]."')";
             $button = "<span class='deleteReplyLabel' id = 'DR".$t[$i][1]."' onclick='deleteReply(".$t[$i][1].")'><b>✖</b></span>";
         }
-        push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1], $button, $t[$i][1], $t[$i][3], $t[$i][0],dateTimeFormat($t[$i][2]);
+        push @html, sprintf $str,$onMouseOver, $onMouseOut, $t[$i][1], $t[$i][1], $button, $t[$i][1], Encode::decode('utf8',$t[$i][3]), Encode::decode('utf8',$t[$i][0]),dateTimeFormat($t[$i][2]);
     }
     
     
