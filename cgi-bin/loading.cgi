@@ -63,11 +63,15 @@ sub processContent{
     my $s = "#";
     $a ="<iframe width='640' height='360' src='";
     $b ="' frameborder='0' allowfullscreen></iframe>";
-    $_[0] =~ s/(http:\/\/)?\w{0,3}.?youtube+\.\w{2,3}\/watch\?v=[\w-]{11}(&[a-zA-Z0-9\-\.\_\~]*=[a-zA-Z0-9\-\.\_\~\!$s]*)*/$a$&$b/gi;
+    #$_[0] =~ s/(http:\/\/)?\w{0,3}.?youtube+\.\w{2,3}\/watch\?v=[\w-]{11}(&[a-zA-Z0-9\-\.\_\~]*=[a-zA-Z0-9\-\.\_\~\!$s]*)*/$a$&$b/gi;
+
+    $_[0] =~ s/(http:\/\/)?\w{0,3}.?youtube+\.\w{2,3}\/watch\?v=[\w-]{11}/$a$&$b/gi;
+    $_[0] =~ s/$b(&[a-zA-Z0-9\-\.\_\~]*=[a-zA-Z0-9\-\.\_\~\!$s]*)*/$b/gi;
+
     #handle change URI
     $_[0] =~  s/youtube\.com\/watch\?v=/youtube\.com\/embed\//gi;
     #handle change special_case
-    $_[0] =~ s/&feature=player_embedded$s!//gi;
+    #$_[0] =~ s/&feature=player_embedded$s!//gi;
     #replace image
     $a ="<a href=\'";
     $b ="\' target='_blank'> <img src=\'";
