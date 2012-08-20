@@ -1,5 +1,5 @@
 html{
-    font-family: sans-serif,"KozGoPro-Regular";
+    font-family: sans-serif, Verdana, Arial, Helvetica;
     cursor: default;
     font-size: 14px;
 }
@@ -22,7 +22,11 @@ color: #000055;
 }
 
 
-input[type="text"], input[type="password"], textarea{
+input[type="text"], input[type="password"]{
+	border-radius:2px;
+}
+
+ textarea{
 	border-radius:2px;
 	resize: vertical;
 }
