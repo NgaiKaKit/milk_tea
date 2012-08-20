@@ -24,7 +24,7 @@ color: #000055;
 
 input[type="text"], input[type="password"], textarea{
 	border-radius:2px;
-	resize: none;
+	resize: vertical;
 }
 
 .TableButton{
