@@ -425,10 +425,13 @@ function goPage(pageNumber){
 //トプック確認、提出
 
 function encodeForSending(str){
-    result = str;
-    for (var i = 0; i < result.length; i++){
-        if (result[i] == '&'){
-            result = replaceAt(result, i,'＆');
+    result = "";
+    for (var i = 0; i < str.length; i++){
+        if (str[i] == '&'){
+            result +="＆";
+        }
+        else{
+            result += str[i];
         }
     }
     return result;
